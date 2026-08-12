@@ -53,7 +53,16 @@ function DashboardPage() {
   const hiddenRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setBills(loadBills());
+    const refresh = () => setBills(loadBills());
+    refresh();
+    window.addEventListener("focus", refresh);
+    window.addEventListener("storage", refresh);
+    document.addEventListener("visibilitychange", refresh);
+    return () => {
+      window.removeEventListener("focus", refresh);
+      window.removeEventListener("storage", refresh);
+      document.removeEventListener("visibilitychange", refresh);
+    };
   }, []);
 
   useEffect(() => {
@@ -61,13 +70,17 @@ function DashboardPage() {
     const node = hiddenRef.current;
     const bill = pdfBill;
     const t = window.setTimeout(() => {
-      exportBillPdf(node, `Bill-${bill.billNo}.pdf`)
+      exportBillPdf(node, pdfFileName(bill))
         .then(() => toast.success("PDF downloaded"))
-        .catch(() => toast.error("Could not generate the PDF"))
+        .catch((error) => {
+          console.error("PDF generation failed", error);
+          toast.error("Could not generate the PDF. Please try again.");
+        })
         .finally(() => setPdfBill(null));
     }, 60);
     return () => window.clearTimeout(t);
   }, [pdfBill]);
+
 
   const stats = useMemo(() => {
     const today = new Date().toISOString().slice(0, 10);
