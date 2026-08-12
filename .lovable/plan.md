@@ -50,7 +50,7 @@ Confirmed problems:
 - Failures show a friendly toast; the real error goes to `console.error` only.
 - Empty-state, null/undefined and date/currency formatting hardened.
 
-**Cleanup** — remove the old amount-in-invoice logic, the 393 seed, duplicate calculations and stray logs; no new dependencies.
+**Cleanup** — remove all per-item amount code paths (`subtotal()` summing, amount inputs, invoice column, normalizer), the 393 seed, duplicate calculations and stray logs; no new dependencies.
 
 ## Verification
 Playwright end-to-end run of your TEST 1–15 list: create a 13-item bill with text quantities, sub total 100000 / discount 0 / advance 350 -> grand total 99650, save, confirm history entry, download PDF and inspect the rendered pages as images to confirm header, all rows, LED SCREEN, quantity text, totals and footer are present and nothing is clipped; then a long-content bill to prove multi-page output; plus consecutive-create, refresh, and edit-keeps-number checks. A final audit report follows the same numbered structure you asked for.
