@@ -14,12 +14,13 @@ import {
   emptyBill,
   grandTotal,
   loadBills,
-  nextBillNo,
+  pdfFileName,
+  peekNextBillNo,
   saveBill,
-  subtotal,
   type Bill,
 } from "@/lib/bills";
 import { exportBillPdf } from "@/lib/pdf";
+
 
 const SHEET_W = 794;
 const SHEET_H = 1123;
