@@ -100,6 +100,7 @@ function BillingPage() {
   const [busy, setBusy] = useState(false);
   const [saving, setSaving] = useState(false);
   const sheetRef = useRef<HTMLDivElement>(null);
+  const pdfSheetRef = useRef<HTMLDivElement>(null);
   const { boxRef, scale } = useSheetScale();
   const sheetHeight = useSheetHeight(sheetRef, bill);
 
