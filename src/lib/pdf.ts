@@ -26,6 +26,13 @@ export async function exportBillPdf(element: HTMLElement, fileName: string) {
     windowHeight: height,
     scrollX: 0,
     scrollY: 0,
+    onclone: (doc: Document) => {
+      // html2canvas cannot rasterise calc()-based clip-path polygons and turns
+      // them into stray triangles, so drop them in the cloned document only.
+      doc.querySelectorAll<HTMLElement>("*").forEach((el) => {
+        if (el.style.clipPath) el.style.clipPath = "none";
+      });
+    },
   });
 
   const pdf = new jsPDF({ unit: "mm", format: "a4", orientation: "portrait", compress: true });
@@ -33,12 +40,22 @@ export async function exportBillPdf(element: HTMLElement, fileName: string) {
   // Page height in canvas pixels, keeping the A4 aspect ratio at full width.
   const pageHeightPx = Math.floor((canvas.width * A4_H_MM) / A4_W_MM);
 
-  if (canvas.height <= pageHeightPx + 2) {
-    const mmHeight = (canvas.height * A4_W_MM) / canvas.width;
-    pdf.addImage(canvas.toDataURL("image/jpeg", 0.98), "JPEG", 0, 0, A4_W_MM, mmHeight);
+  // Single page, or a slight overflow that is better shrunk than split.
+  if (canvas.height <= pageHeightPx * 1.14) {
+    const mmHeight = Math.min(A4_H_MM, (canvas.height * A4_W_MM) / canvas.width);
+    const mmWidth = (canvas.width * mmHeight) / canvas.height;
+    pdf.addImage(
+      canvas.toDataURL("image/jpeg", 0.98),
+      "JPEG",
+      (A4_W_MM - mmWidth) / 2,
+      0,
+      mmWidth,
+      mmHeight,
+    );
     pdf.save(fileName);
     return;
   }
+
 
   const ctx = canvas.getContext("2d");
   const isBlankRow = (y: number) => {
