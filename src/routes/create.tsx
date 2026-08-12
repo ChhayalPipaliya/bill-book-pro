@@ -340,7 +340,7 @@ function BillingPage() {
               </div>
             </section>
 
-            </section>
+
 
           </div>
         </div>
