@@ -379,6 +379,13 @@ function BillingPage() {
               </div>
             </section>
 
+            {/* Unscaled off-screen copy of the sheet — the PDF is always rendered from this
+                node so the preview's scale transform can never distort the export. */}
+            <div aria-hidden className="pointer-events-none fixed -top-[4000px] left-0">
+              <PrintedBill ref={pdfSheetRef} bill={bill} />
+            </div>
+
+
 
 
           </div>
