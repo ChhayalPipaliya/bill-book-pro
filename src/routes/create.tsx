@@ -48,6 +48,25 @@ function useSheetScale() {
   return { boxRef, scale };
 }
 
+/** Tracks the real rendered height of the sheet so the preview never clips content. */
+function useSheetHeight(ref: React.RefObject<HTMLDivElement | null>, dep: unknown) {
+  const [height, setHeight] = useState(SHEET_H);
+
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const measure = () => setHeight(Math.max(SHEET_H, el.scrollHeight));
+    measure();
+    if (typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [ref, dep]);
+
+  return height;
+}
+
+
 
 
 export const Route = createFileRoute("/create")({
