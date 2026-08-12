@@ -179,9 +179,12 @@ function BillingPage() {
                     id="billNo"
                     className="h-11 rounded-xl"
                     value={bill.billNo}
-                    onChange={(e) => set("billNo", e.target.value)}
+                    readOnly
+                    aria-readonly="true"
+                    title="Bill numbers are generated automatically"
                   />
                 </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="mobile">Mobile Number</Label>
                   <Input
