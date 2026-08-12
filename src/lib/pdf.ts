@@ -31,9 +31,6 @@ export async function exportBillPdf(element: HTMLElement, fileName: string) {
         // html2canvas cannot rasterise calc()-based clip-path polygons and turns
         // them into stray triangles, so drop them in the cloned document only.
         if (el.style.clipPath) el.style.clipPath = "none";
-        // With letter-spacing it lays text out per character and swallows the
-        // spaces between words, so neutralise it for the raster pass only.
-        if (el.style.letterSpacing) el.style.letterSpacing = "normal";
       });
     },
 
