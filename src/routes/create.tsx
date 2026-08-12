@@ -311,7 +311,7 @@ function BillingPage() {
               </div>
             </section>
 
-            {/* Live printed-bill preview — fixed A4 sheet, scaled to fit */}
+            {/* Live printed-bill preview — A4 width sheet, scaled to fit, height follows content */}
             <section>
               <div className="mb-3 flex items-center justify-between">
                 <h2 className="font-display text-lg font-semibold">Live Bill Preview</h2>
@@ -321,12 +321,11 @@ function BillingPage() {
                 <div ref={boxRef} className="mx-auto w-full">
                   <div
                     className="relative mx-auto shadow-[var(--shadow-soft)]"
-                    style={{ width: SHEET_W * scale, height: SHEET_H * scale }}
+                    style={{ width: SHEET_W * scale, height: sheetHeight * scale }}
                   >
                     <div
                       style={{
                         width: SHEET_W,
-                        height: SHEET_H,
                         transform: `scale(${scale})`,
                         transformOrigin: "top left",
                         position: "absolute",
@@ -339,6 +338,8 @@ function BillingPage() {
                   </div>
                 </div>
               </div>
+            </section>
+
             </section>
 
           </div>
