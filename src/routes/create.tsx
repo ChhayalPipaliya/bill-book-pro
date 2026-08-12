@@ -270,10 +270,19 @@ function BillingPage() {
 
               <h2 className="font-display text-lg font-semibold">Totals</h2>
               <div className="mt-4 space-y-3">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">Subtotal</span>
-                  <span className="font-semibold">₹ {currency(sub)}</span>
+                <div className="space-y-2">
+                  <Label htmlFor="subTotal">Total Amount (Sub Total)</Label>
+                  <Input
+                    id="subTotal"
+                    inputMode="numeric"
+                    className="h-11 rounded-xl"
+                    value={bill.subTotal || ""}
+                    onChange={(e) =>
+                      set("subTotal", Number(e.target.value.replace(/[^\d.]/g, "")) || 0)
+                    }
+                  />
                 </div>
+
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="discount">Discount</Label>
