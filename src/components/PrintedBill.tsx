@@ -503,9 +503,8 @@ export const PrintedBill = forwardRef<HTMLDivElement, { bill: Bill }>(function P
               <tr style={{ background: `linear-gradient(180deg, #3b1163, ${PURPLE})` }}>
                 <th style={{ ...th, width: 90, textAlign: "center" }}>SR. NO.</th>
                 <th style={{ ...th, textAlign: "center" }}>ITEM NAME</th>
-                <th style={{ ...th, width: 140, textAlign: "center" }}>QTY.</th>
-                <th style={{ ...th, width: 175, textAlign: "center", borderRight: "none" }}>
-                  AMOUNT (₹)
+                <th style={{ ...th, width: 220, textAlign: "center", borderRight: "none" }}>
+                  QTY.
                 </th>
               </tr>
             </thead>
@@ -514,14 +513,22 @@ export const PrintedBill = forwardRef<HTMLDivElement, { bill: Bill }>(function P
                 <tr key={i}>
                   <td style={{ ...td, textAlign: "center" }}>{i + 1}</td>
                   <td style={{ ...td, textTransform: "uppercase" }}>{item.name}</td>
-                  <td style={{ ...td, textAlign: "center" }}>{item.qty ? item.qty : ""}</td>
-                  <td style={{ ...td, textAlign: "right", borderRight: "none" }}>
-                    {item.amount ? currency(item.amount) : ""}
+                  <td
+                    style={{
+                      ...td,
+                      textAlign: "center",
+                      borderRight: "none",
+                      textTransform: "uppercase",
+                      wordBreak: "break-word",
+                    }}
+                  >
+                    {item.qty || ""}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+
 
           {/* totals block, right aligned as in the printed book */}
           <div style={{ display: "flex", justifyContent: "flex-end", padding: "6px 8px 10px" }}>
