@@ -36,8 +36,8 @@ Confirmed problems:
 - Number is reserved at save time, so consecutive saves without a refresh increment correctly.
 
 **Items & quantity**
-- Invoice table columns become SR. NO. | ITEM NAME | QTY. only (Amount column removed from the printed bill).
-- Per your choice, per-item Amount inputs remain in the form (hidden from the invoice) and Sub Total is auto-summed from them.
+- Items are SR. NO. | ITEM NAME | QTY. only — everywhere. Per-item Amount is removed completely from the form, the `BillItem` model, validation, `normalizeItems`, live preview, invoice/PDF, save payload, edit flow and bill history; old saved bills drop the field on migration.
+- Sub Total (Total Amount) becomes a bill-level field the owner types manually, below the Items section, next to Discount and Advance. It is never summed from items.
 - `qty` becomes a string, stored and printed verbatim ("2 Pis", "1000 sq", "65 kv", "02"), never parsed as a number. Long values wrap without breaking the layout.
 - Predefined list becomes the 13 fixed rows including LED SCREEN, in your order; old saved bills are migrated (numeric qty -> string, new row appended).
 
