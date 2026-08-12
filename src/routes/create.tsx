@@ -236,34 +236,27 @@ function BillingPage() {
               <Separator className="my-6" />
 
               <h2 className="font-display text-lg font-semibold">Items</h2>
-              <div className="mt-3 grid grid-cols-[28px_1fr_74px_110px] gap-2 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
+              <div className="mt-3 grid grid-cols-[28px_1fr_130px] gap-2 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
                 <span>Sr.</span>
                 <span>Item</span>
                 <span>Qty</span>
-                <span>Amount</span>
               </div>
               <div className="mt-2 space-y-2">
                 {bill.items.map((item, i) => (
-                  <div key={i} className="grid grid-cols-[28px_1fr_74px_110px] items-center gap-2">
+                  <div key={i} className="grid grid-cols-[28px_1fr_130px] items-center gap-2">
                     <span className="text-xs font-semibold text-muted-foreground">{i + 1}.</span>
                     <span className="truncate text-sm font-semibold uppercase">{item.name}</span>
                     <Input
                       aria-label={`Item ${i + 1} quantity`}
-                      inputMode="numeric"
                       className="h-10 rounded-lg text-center"
-                      value={item.qty || ""}
+                      placeholder="e.g. 2 Pis"
+                      value={item.qty}
                       onChange={(e) => setItem(i, "qty", e.target.value)}
-                    />
-                    <Input
-                      aria-label={`Item ${i + 1} amount`}
-                      inputMode="numeric"
-                      className="h-10 rounded-lg text-right"
-                      value={item.amount || ""}
-                      onChange={(e) => setItem(i, "amount", e.target.value)}
                     />
                   </div>
                 ))}
               </div>
+
 
 
               <Separator className="my-6" />
