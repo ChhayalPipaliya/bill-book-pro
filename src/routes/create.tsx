@@ -78,60 +78,74 @@ function BillingPage() {
   const { id } = useSearch({ from: "/create" });
   const [bill, setBill] = useState<Bill>(() => emptyBill(""));
   const [busy, setBusy] = useState(false);
+  const [saving, setSaving] = useState(false);
   const sheetRef = useRef<HTMLDivElement>(null);
   const { boxRef, scale } = useSheetScale();
-
+  const sheetHeight = useSheetHeight(sheetRef, bill);
 
   useEffect(() => {
     const bills = loadBills();
     const existing = id ? bills.find((b) => b.id === id) : undefined;
-    setBill(existing ?? emptyBill(nextBillNo(bills)));
+    setBill(existing ?? emptyBill(peekNextBillNo(bills)));
   }, [id]);
 
-  const sub = useMemo(() => subtotal(bill), [bill]);
   const total = useMemo(() => grandTotal(bill), [bill]);
 
   function set<K extends keyof Bill>(key: K, value: Bill[K]) {
     setBill((prev) => ({ ...prev, [key]: value }));
   }
 
-  function setItem(index: number, key: "name" | "qty" | "amount", value: string) {
+  function setItem(index: number, key: "name" | "qty", value: string) {
     setBill((prev) => ({
       ...prev,
-      items: prev.items.map((item, i) =>
-        i === index
-          ? { ...item, [key]: key === "name" ? value : Number(value.replace(/[^\d.]/g, "")) || 0 }
-          : item,
-      ),
+      items: prev.items.map((item, i) => (i === index ? { ...item, [key]: value } : item)),
     }));
   }
 
   function handleSave() {
+    if (saving) return;
     if (!bill.partyName.trim()) {
       toast.error("Party name is required");
       return;
     }
-    saveBill(bill);
-    toast.success(`Bill ${bill.billNo} saved`);
+    setSaving(true);
+    try {
+      const { bill: saved } = saveBill(bill);
+      setBill(saved);
+      if (saved.id !== id) navigate({ to: "/create", search: { id: saved.id } });
+      toast.success(`Bill ${saved.billNo} saved`);
+    } catch (error) {
+      console.error("Save bill failed", error);
+      toast.error("Could not save the bill. Please try again.");
+    } finally {
+      setSaving(false);
+    }
   }
 
   async function handlePdf() {
-    if (!sheetRef.current) return;
+    if (busy) return;
+    if (!sheetRef.current) {
+      toast.error("The bill preview is not ready yet");
+      return;
+    }
     setBusy(true);
     try {
-      await exportBillPdf(sheetRef.current, `Bill-${bill.billNo || "draft"}.pdf`);
+      await exportBillPdf(sheetRef.current, pdfFileName(bill));
       toast.success("PDF downloaded");
-    } catch {
-      toast.error("Could not generate the PDF");
+    } catch (error) {
+      console.error("PDF generation failed", error);
+      toast.error("Could not generate the PDF. Please try again.");
     } finally {
       setBusy(false);
     }
   }
 
   function handleReset() {
-    setBill(emptyBill(nextBillNo(loadBills())));
+    setBill(emptyBill(peekNextBillNo(loadBills())));
     navigate({ to: "/create", search: {} });
   }
+
+
 
   return (
     <div className="min-h-screen bg-background">
