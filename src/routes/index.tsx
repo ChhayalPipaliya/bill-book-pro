@@ -202,6 +202,10 @@ function DashboardPage() {
                           <TableCell className="text-muted-foreground">
                             {formatDate(bill.eventDate) || "—"}
                           </TableCell>
+                          <TableCell className="text-muted-foreground">
+                            {formatDate(bill.createdAt.slice(0, 10)) || "—"}
+                          </TableCell>
+
                           <TableCell className="text-right font-semibold">
                             ₹ {currency(grandTotal(bill))}
                           </TableCell>
