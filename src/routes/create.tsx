@@ -145,13 +145,15 @@ function BillingPage() {
 
   async function handlePdf() {
     if (busy) return;
-    if (!sheetRef.current) {
+    const node = pdfSheetRef.current ?? sheetRef.current;
+    if (!node) {
       toast.error("The bill preview is not ready yet");
       return;
     }
     setBusy(true);
     try {
-      await exportBillPdf(sheetRef.current, pdfFileName(bill));
+      await exportBillPdf(node, pdfFileName(bill));
+
       toast.success("PDF downloaded");
     } catch (error) {
       console.error("PDF generation failed", error);
