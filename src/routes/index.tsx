@@ -186,7 +186,9 @@ function DashboardPage() {
                         <TableHead className="pl-6">Bill Number</TableHead>
                         <TableHead>Party Name</TableHead>
                         <TableHead>Event Date</TableHead>
-                        <TableHead className="text-right">Amount</TableHead>
+                        <TableHead>Created</TableHead>
+                        <TableHead className="text-right">Grand Total</TableHead>
+
                         <TableHead className="pr-6 text-right">Actions</TableHead>
                       </TableRow>
                     </TableHeader>
