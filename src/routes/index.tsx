@@ -22,7 +22,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { currency, deleteBill, formatDate, grandTotal, loadBills, type Bill } from "@/lib/bills";
+import {
+  currency,
+  deleteBill,
+  formatDate,
+  grandTotal,
+  loadBills,
+  pdfFileName,
+  type Bill,
+} from "@/lib/bills";
 import { exportBillPdf } from "@/lib/pdf";
 
 export const Route = createFileRoute("/")({
