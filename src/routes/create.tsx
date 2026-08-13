@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { Download, RotateCcw, Save } from "lucide-react";
+import { Download, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 import { AppNavbar } from "@/components/AppNavbar";
 import { DjBackdrop } from "@/components/DjBackdrop";
