@@ -123,45 +123,53 @@ function BillingPage() {
     }));
   }
 
-  function handleSave() {
-    if (saving) return;
+  /** Waits for React to commit the saved bill into the hidden PDF sheet. */
+  function nextPaint() {
+    return new Promise<void>((resolve) =>
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+    );
+  }
+
+  async function handleGenerate() {
+    if (busy) return;
     if (!bill.partyName.trim()) {
-      toast.error("Party name is required");
+      toast.error("Party name is required before generating the bill");
       return;
     }
-    setSaving(true);
+    if (!bill.eventDate) {
+      toast.error("Event date is required before generating the bill");
+      return;
+    }
+
+    setBusy(true);
+    let saved: Bill;
     try {
-      const { bill: saved } = saveBill(bill);
+      saved = saveBill(bill).bill;
       setBill(saved);
       if (saved.id !== id) navigate({ to: "/create", search: { id: saved.id } });
-      toast.success(`Bill ${saved.billNo} saved`);
     } catch (error) {
       console.error("Save bill failed", error);
       toast.error("Could not save the bill. Please try again.");
-    } finally {
-      setSaving(false);
-    }
-  }
-
-  async function handlePdf() {
-    if (busy) return;
-    const node = pdfSheetRef.current ?? sheetRef.current;
-    if (!node) {
-      toast.error("The bill preview is not ready yet");
+      setBusy(false);
       return;
     }
-    setBusy(true);
-    try {
-      await exportBillPdf(node, pdfFileName(bill));
 
-      toast.success("PDF downloaded");
+    try {
+      await nextPaint();
+      const node = pdfSheetRef.current ?? sheetRef.current;
+      if (!node) throw new Error("Bill preview node is not mounted");
+      await exportBillPdf(node, pdfFileName(saved));
+      toast.success(`Bill ${saved.billNo} saved and PDF downloaded`);
     } catch (error) {
       console.error("PDF generation failed", error);
-      toast.error("Could not generate the PDF. Please try again.");
+      toast.error(
+        `Bill ${saved.billNo} was saved, but the PDF could not be generated. You can retry the download from the Dashboard.`,
+      );
     } finally {
       setBusy(false);
     }
   }
+
 
   function handleReset() {
     setBill(emptyBill(peekNextBillNo(loadBills())));
