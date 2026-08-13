@@ -200,16 +200,14 @@ function BillingPage() {
               <Button variant="outline" className="h-11 rounded-xl" onClick={handleReset}>
                 <RotateCcw className="size-4" /> Reset
               </Button>
-              <Button variant="outline" className="h-11 rounded-xl" onClick={handleSave}>
-                <Save className="size-4" /> Save Bill
-              </Button>
               <Button
-                onClick={handlePdf}
+                onClick={handleGenerate}
                 disabled={busy}
                 className="btn-glow h-11 rounded-xl px-5 font-semibold text-primary-foreground hover:text-primary-foreground"
               >
-                <Download className="size-4" /> {busy ? "Generating…" : "Generate PDF"}
+                <Download className="size-4" /> {busy ? "Saving & Generating PDF…" : "Generate PDF"}
               </Button>
+
             </div>
           </div>
 
