@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { Download, RotateCcw, Save } from "lucide-react";
+import { Download, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 import { AppNavbar } from "@/components/AppNavbar";
 import { DjBackdrop } from "@/components/DjBackdrop";
@@ -98,7 +98,7 @@ function BillingPage() {
   const { id } = useSearch({ from: "/create" });
   const [bill, setBill] = useState<Bill>(() => emptyBill(""));
   const [busy, setBusy] = useState(false);
-  const [saving, setSaving] = useState(false);
+  
   const sheetRef = useRef<HTMLDivElement>(null);
   const pdfSheetRef = useRef<HTMLDivElement>(null);
   const { boxRef, scale } = useSheetScale();
@@ -123,45 +123,53 @@ function BillingPage() {
     }));
   }
 
-  function handleSave() {
-    if (saving) return;
+  /** Waits for React to commit the saved bill into the hidden PDF sheet. */
+  function nextPaint() {
+    return new Promise<void>((resolve) =>
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+    );
+  }
+
+  async function handleGenerate() {
+    if (busy) return;
     if (!bill.partyName.trim()) {
-      toast.error("Party name is required");
+      toast.error("Party name is required before generating the bill");
       return;
     }
-    setSaving(true);
+    if (!bill.eventDate) {
+      toast.error("Event date is required before generating the bill");
+      return;
+    }
+
+    setBusy(true);
+    let saved: Bill;
     try {
-      const { bill: saved } = saveBill(bill);
+      saved = saveBill(bill).bill;
       setBill(saved);
       if (saved.id !== id) navigate({ to: "/create", search: { id: saved.id } });
-      toast.success(`Bill ${saved.billNo} saved`);
     } catch (error) {
       console.error("Save bill failed", error);
       toast.error("Could not save the bill. Please try again.");
-    } finally {
-      setSaving(false);
-    }
-  }
-
-  async function handlePdf() {
-    if (busy) return;
-    const node = pdfSheetRef.current ?? sheetRef.current;
-    if (!node) {
-      toast.error("The bill preview is not ready yet");
+      setBusy(false);
       return;
     }
-    setBusy(true);
-    try {
-      await exportBillPdf(node, pdfFileName(bill));
 
-      toast.success("PDF downloaded");
+    try {
+      await nextPaint();
+      const node = pdfSheetRef.current ?? sheetRef.current;
+      if (!node) throw new Error("Bill preview node is not mounted");
+      await exportBillPdf(node, pdfFileName(saved));
+      toast.success(`Bill ${saved.billNo} saved and PDF downloaded`);
     } catch (error) {
       console.error("PDF generation failed", error);
-      toast.error("Could not generate the PDF. Please try again.");
+      toast.error(
+        `Bill ${saved.billNo} was saved, but the PDF could not be generated. You can retry the download from the Dashboard.`,
+      );
     } finally {
       setBusy(false);
     }
   }
+
 
   function handleReset() {
     setBill(emptyBill(peekNextBillNo(loadBills())));
@@ -192,16 +200,14 @@ function BillingPage() {
               <Button variant="outline" className="h-11 rounded-xl" onClick={handleReset}>
                 <RotateCcw className="size-4" /> Reset
               </Button>
-              <Button variant="outline" className="h-11 rounded-xl" onClick={handleSave}>
-                <Save className="size-4" /> Save Bill
-              </Button>
               <Button
-                onClick={handlePdf}
+                onClick={handleGenerate}
                 disabled={busy}
                 className="btn-glow h-11 rounded-xl px-5 font-semibold text-primary-foreground hover:text-primary-foreground"
               >
-                <Download className="size-4" /> {busy ? "Generating…" : "Generate PDF"}
+                <Download className="size-4" /> {busy ? "Saving & Generating PDF…" : "Generate PDF"}
               </Button>
+
             </div>
           </div>
 
