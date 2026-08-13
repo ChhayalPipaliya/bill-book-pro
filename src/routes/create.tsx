@@ -98,7 +98,7 @@ function BillingPage() {
   const { id } = useSearch({ from: "/create" });
   const [bill, setBill] = useState<Bill>(() => emptyBill(""));
   const [busy, setBusy] = useState(false);
-  const [saving, setSaving] = useState(false);
+  
   const sheetRef = useRef<HTMLDivElement>(null);
   const pdfSheetRef = useRef<HTMLDivElement>(null);
   const { boxRef, scale } = useSheetScale();
