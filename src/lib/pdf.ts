@@ -93,7 +93,7 @@ export async function exportBillPdf(element: HTMLElement, fileName: string) {
       mmWidth,
       mmHeight,
     );
-    pdf.save(fileName);
+    await deliver(pdf, fileName);
     return;
   }
 
@@ -141,5 +141,5 @@ export async function exportBillPdf(element: HTMLElement, fileName: string) {
     offset += sliceHeight;
   }
 
-  pdf.save(fileName);
+  await deliver(pdf, fileName);
 }
