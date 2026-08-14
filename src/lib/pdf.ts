@@ -3,6 +3,46 @@ import { jsPDF } from "jspdf";
 const A4_W_MM = 210;
 const A4_H_MM = 297;
 
+function isIOS() {
+  if (typeof navigator === "undefined") return false;
+  const ua = navigator.userAgent;
+  return /iPad|iPhone|iPod/.test(ua) || (/Mac/.test(ua) && navigator.maxTouchPoints > 1);
+}
+
+/**
+ * Delivers the finished PDF to the device.
+ * Desktop and Android Chrome get a normal blob download; iOS Safari cannot
+ * reliably download blobs, so it gets the native share sheet (Files/WhatsApp)
+ * with a download fallback if the user dismisses it.
+ */
+async function deliver(pdf: jsPDF, fileName: string) {
+  const blob = pdf.output("blob") as Blob;
+
+  if (isIOS() && typeof navigator !== "undefined" && "share" in navigator) {
+    try {
+      const file = new File([blob], fileName, { type: "application/pdf" });
+      const nav = navigator as Navigator & { canShare?: (d: unknown) => boolean };
+      if (!nav.canShare || nav.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title: fileName });
+        return;
+      }
+    } catch (error) {
+      if ((error as Error)?.name === "AbortError") return;
+      console.error("Share sheet unavailable, falling back to download", error);
+    }
+  }
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = fileName;
+  link.rel = "noopener";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 60_000);
+}
+
 /**
  * Exports a DOM node as a print-ready A4 PDF.
  * The node is rasterised at its full rendered height and then sliced into as
