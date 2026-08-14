@@ -216,7 +216,8 @@ export function loadBills(): Bill[] {
 
 function persist(bills: Bill[]) {
   if (typeof window === "undefined") return;
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(bills.slice(0, 200)));
+  // No history truncation: every saved bill is kept.
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(bills));
 }
 
 /** Saves a bill. New bills get a freshly reserved, unique bill number. */
