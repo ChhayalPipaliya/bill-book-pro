@@ -367,12 +367,12 @@ function BillingPage() {
             </section>
 
             {/* Live printed-bill preview — A4 width sheet, scaled to fit, height follows content */}
-            <section>
-              <div className="mb-3 flex items-center justify-between">
+            <section className="min-w-0">
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                 <h2 className="font-display text-lg font-semibold">Live Bill Preview</h2>
                 <span className="text-xs text-muted-foreground">A4 · Original printed layout</span>
               </div>
-              <div className="rounded-2xl border border-border bg-muted/40 p-3 sm:p-4">
+              <div className="rounded-2xl border border-border bg-muted/40 p-2 sm:p-4">
                 <div ref={boxRef} className="mx-auto w-full">
                   <div
                     className="relative mx-auto shadow-[var(--shadow-soft)]"
@@ -394,19 +394,16 @@ function BillingPage() {
                 </div>
               </div>
             </section>
-
-            {/* Unscaled off-screen copy of the sheet — the PDF is always rendered from this
-                node so the preview's scale transform can never distort the export. */}
-            <div aria-hidden className="pointer-events-none fixed -top-[4000px] left-0">
-              <PrintedBill ref={pdfSheetRef} bill={bill} />
-            </div>
-
-
-
-
           </div>
         </div>
       </main>
+
+      {/* Unscaled off-screen copy of the sheet — the PDF is always rendered from this
+          node so the preview's scale transform can never distort the export. Kept outside
+          the page grid so its 794px width can never widen the mobile layout. */}
+      <div aria-hidden className="pointer-events-none fixed -top-[4000px] left-0">
+        <PrintedBill ref={pdfSheetRef} bill={bill} />
+      </div>
     </div>
   );
 }
