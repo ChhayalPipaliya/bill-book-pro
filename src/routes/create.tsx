@@ -196,14 +196,18 @@ function BillingPage() {
                 Edit on the left — the printed bill book page on the right updates instantly.
               </p>
             </div>
-            <div className="flex flex-wrap gap-2.5">
-              <Button variant="outline" className="h-11 rounded-xl" onClick={handleReset}>
+            <div className="flex w-full flex-wrap gap-2.5 sm:w-auto">
+              <Button
+                variant="outline"
+                className="h-11 flex-1 rounded-xl sm:flex-none"
+                onClick={handleReset}
+              >
                 <RotateCcw className="size-4" /> Reset
               </Button>
               <Button
                 onClick={handleGenerate}
                 disabled={busy}
-                className="btn-glow h-11 rounded-xl px-5 font-semibold text-primary-foreground hover:text-primary-foreground"
+                className="btn-glow h-11 flex-1 rounded-xl px-5 font-semibold text-primary-foreground hover:text-primary-foreground sm:flex-none"
               >
                 <Download className="size-4" /> {busy ? "Saving & Generating PDF…" : "Generate PDF"}
               </Button>
@@ -211,9 +215,9 @@ function BillingPage() {
             </div>
           </div>
 
-          <div className="mt-7 grid items-start gap-6 xl:grid-cols-[minmax(0,440px)_minmax(0,1fr)]">
+          <div className="mt-7 grid min-w-0 items-start gap-6 xl:grid-cols-[minmax(0,440px)_minmax(0,1fr)]">
             {/* Form */}
-            <section className="glass-card p-6">
+            <section className="glass-card min-w-0 p-4 sm:p-6">
               <h2 className="font-display text-lg font-semibold">Bill Details</h2>
               <div className="mt-5 grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
