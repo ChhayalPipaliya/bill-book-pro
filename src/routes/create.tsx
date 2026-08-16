@@ -286,7 +286,7 @@ function BillingPage() {
               <Separator className="my-6" />
 
               <h2 className="font-display text-lg font-semibold">Items</h2>
-              <div className="mt-3 grid grid-cols-[28px_1fr_130px] gap-2 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
+              <div className="mt-3 grid grid-cols-[22px_minmax(0,1fr)_104px] gap-2 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase sm:grid-cols-[28px_minmax(0,1fr)_130px]">
                 <span>Sr.</span>
                 <span>Item</span>
                 <span>Qty</span>
