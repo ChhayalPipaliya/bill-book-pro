@@ -196,14 +196,18 @@ function BillingPage() {
                 Edit on the left — the printed bill book page on the right updates instantly.
               </p>
             </div>
-            <div className="flex flex-wrap gap-2.5">
-              <Button variant="outline" className="h-11 rounded-xl" onClick={handleReset}>
+            <div className="flex w-full flex-wrap gap-2.5 sm:w-auto">
+              <Button
+                variant="outline"
+                className="h-11 flex-1 rounded-xl sm:flex-none"
+                onClick={handleReset}
+              >
                 <RotateCcw className="size-4" /> Reset
               </Button>
               <Button
                 onClick={handleGenerate}
                 disabled={busy}
-                className="btn-glow h-11 rounded-xl px-5 font-semibold text-primary-foreground hover:text-primary-foreground"
+                className="btn-glow h-11 flex-1 rounded-xl px-5 font-semibold text-primary-foreground hover:text-primary-foreground sm:flex-none"
               >
                 <Download className="size-4" /> {busy ? "Saving & Generating PDF…" : "Generate PDF"}
               </Button>
@@ -211,9 +215,9 @@ function BillingPage() {
             </div>
           </div>
 
-          <div className="mt-7 grid items-start gap-6 xl:grid-cols-[minmax(0,440px)_minmax(0,1fr)]">
+          <div className="mt-7 grid min-w-0 items-start gap-6 xl:grid-cols-[minmax(0,440px)_minmax(0,1fr)]">
             {/* Form */}
-            <section className="glass-card p-6">
+            <section className="glass-card min-w-0 p-4 sm:p-6">
               <h2 className="font-display text-lg font-semibold">Bill Details</h2>
               <div className="mt-5 grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
@@ -282,14 +286,17 @@ function BillingPage() {
               <Separator className="my-6" />
 
               <h2 className="font-display text-lg font-semibold">Items</h2>
-              <div className="mt-3 grid grid-cols-[28px_1fr_130px] gap-2 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
+              <div className="mt-3 grid grid-cols-[22px_minmax(0,1fr)_104px] gap-2 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase sm:grid-cols-[28px_minmax(0,1fr)_130px]">
                 <span>Sr.</span>
                 <span>Item</span>
                 <span>Qty</span>
               </div>
               <div className="mt-2 space-y-2">
                 {bill.items.map((item, i) => (
-                  <div key={i} className="grid grid-cols-[28px_1fr_130px] items-center gap-2">
+                  <div
+                    key={i}
+                    className="grid grid-cols-[22px_minmax(0,1fr)_104px] items-center gap-2 sm:grid-cols-[28px_minmax(0,1fr)_130px]"
+                  >
                     <span className="text-xs font-semibold text-muted-foreground">{i + 1}.</span>
                     <span className="truncate text-sm font-semibold uppercase">{item.name}</span>
                     <Input
@@ -360,12 +367,12 @@ function BillingPage() {
             </section>
 
             {/* Live printed-bill preview — A4 width sheet, scaled to fit, height follows content */}
-            <section>
-              <div className="mb-3 flex items-center justify-between">
+            <section className="min-w-0">
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                 <h2 className="font-display text-lg font-semibold">Live Bill Preview</h2>
                 <span className="text-xs text-muted-foreground">A4 · Original printed layout</span>
               </div>
-              <div className="rounded-2xl border border-border bg-muted/40 p-3 sm:p-4">
+              <div className="rounded-2xl border border-border bg-muted/40 p-2 sm:p-4">
                 <div ref={boxRef} className="mx-auto w-full">
                   <div
                     className="relative mx-auto shadow-[var(--shadow-soft)]"
@@ -387,19 +394,16 @@ function BillingPage() {
                 </div>
               </div>
             </section>
-
-            {/* Unscaled off-screen copy of the sheet — the PDF is always rendered from this
-                node so the preview's scale transform can never distort the export. */}
-            <div aria-hidden className="pointer-events-none fixed -top-[4000px] left-0">
-              <PrintedBill ref={pdfSheetRef} bill={bill} />
-            </div>
-
-
-
-
           </div>
         </div>
       </main>
+
+      {/* Unscaled off-screen copy of the sheet — the PDF is always rendered from this
+          node so the preview's scale transform can never distort the export. Kept outside
+          the page grid so its 794px width can never widen the mobile layout. */}
+      <div aria-hidden className="pointer-events-none fixed -top-[4000px] left-0">
+        <PrintedBill ref={pdfSheetRef} bill={bill} />
+      </div>
     </div>
   );
 }

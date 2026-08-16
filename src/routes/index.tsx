@@ -148,7 +148,7 @@ function DashboardPage() {
             />
           </section>
 
-          <section className="glass-card mt-6 flex flex-wrap items-center justify-between gap-5 p-6 sm:p-8">
+          <section className="glass-card mt-6 flex flex-wrap items-center justify-between gap-5 p-5 sm:p-8">
             <div>
               <h2 className="font-display text-2xl font-semibold">Ready for the next gig?</h2>
               <p className="mt-1.5 max-w-lg text-sm text-muted-foreground">
@@ -168,7 +168,7 @@ function DashboardPage() {
           </section>
 
           <section className="glass-card mt-6 overflow-hidden">
-            <div className="border-b border-border/70 px-6 py-5">
+            <div className="border-b border-border/70 px-5 py-5 sm:px-6">
               <h2 className="font-display text-xl font-semibold">Recent Bills</h2>
               <p className="text-sm text-muted-foreground">Saved bills from your billing book</p>
             </div>
@@ -179,11 +179,11 @@ function DashboardPage() {
               </p>
             ) : (
               <>
-                <div className="hidden md:block">
+                <div className="hidden overflow-x-auto md:block">
                   <Table>
                     <TableHeader>
                       <TableRow className="hover:bg-transparent">
-                        <TableHead className="pl-6">Bill Number</TableHead>
+                        <TableHead className="pl-6 whitespace-nowrap">Bill Number</TableHead>
                         <TableHead>Party Name</TableHead>
                         <TableHead>Event Date</TableHead>
                         <TableHead>Created</TableHead>
@@ -195,7 +195,7 @@ function DashboardPage() {
                     <TableBody>
                       {bills.map((bill) => (
                         <TableRow key={bill.id} className="transition-colors hover:bg-accent/40">
-                          <TableCell className="pl-6 font-medium text-primary">
+                          <TableCell className="pl-6 font-medium whitespace-nowrap text-primary">
                             {bill.billNo}
                           </TableCell>
                           <TableCell className="font-medium">{bill.partyName || "—"}</TableCell>
@@ -265,7 +265,7 @@ function DashboardPage() {
                         <Button
                           size="sm"
                           variant="outline"
-                          className="h-8 flex-1 rounded-lg"
+                          className="h-9 flex-1 rounded-lg"
                           onClick={() => navigate({ to: "/create", search: { id: bill.id } })}
                         >
                           <Eye className="size-3.5" /> View
@@ -273,7 +273,7 @@ function DashboardPage() {
                         <Button
                           size="sm"
                           variant="outline"
-                          className="h-8 flex-1 rounded-lg border-primary/25 text-primary hover:text-primary"
+                          className="h-9 flex-1 rounded-lg border-primary/25 text-primary hover:text-primary"
                           onClick={() => setPdfBill(bill)}
                           disabled={pdfBill !== null}
                         >
@@ -282,7 +282,7 @@ function DashboardPage() {
                         <Button
                           size="sm"
                           variant="outline"
-                          className="h-8 flex-1 rounded-lg border-destructive/30 text-destructive hover:text-destructive"
+                          className="h-9 flex-1 rounded-lg border-destructive/30 text-destructive hover:text-destructive"
                           onClick={() => handleDelete(bill)}
                         >
                           <Trash2 className="size-3.5" /> Delete
