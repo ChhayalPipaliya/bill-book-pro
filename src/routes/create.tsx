@@ -293,7 +293,10 @@ function BillingPage() {
               </div>
               <div className="mt-2 space-y-2">
                 {bill.items.map((item, i) => (
-                  <div key={i} className="grid grid-cols-[28px_1fr_130px] items-center gap-2">
+                  <div
+                    key={i}
+                    className="grid grid-cols-[22px_minmax(0,1fr)_104px] items-center gap-2 sm:grid-cols-[28px_minmax(0,1fr)_130px]"
+                  >
                     <span className="text-xs font-semibold text-muted-foreground">{i + 1}.</span>
                     <span className="truncate text-sm font-semibold uppercase">{item.name}</span>
                     <Input
